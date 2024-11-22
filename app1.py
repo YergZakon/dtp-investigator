@@ -301,8 +301,9 @@ def main():
         )
         
         # Добавляем возможность изменить API ключ в сайдбаре
-        if st.button("Изменить API ключ"):
-            st.session_state.ANTHROPIC_API_KEY = None
+        # if st.button("Изменить API ключ"):
+       #     st.session_state.ANTHROPIC_API_KEY = None
+        
     
     # Проверяем наличие API ключа перед отображением основного интерфейса
     api_key = get_api_key()
@@ -382,36 +383,11 @@ def main():
     
     # Кнопка анализа
     if st.button("Проанализировать ситуацию", type="primary"):
-        # Собираем все данные в словарь
-        case_details = {
-            "date_time": str(date_time),
-            "location": location,
-            "incident_type": incident_type,
-            "participants": {
-                "vehicle": {
-                    "present": vehicle_present,
-                    "details": vehicle_details if vehicle_present else None
-                },
-                "victim": {
-                    "present": victim_present,
-                    "details": victim_details if victim_present else None
-                },
-                "driver": {
-                    "present": driver_present,
-                    "details": driver_details if driver_present else None
-                }
-            },
-            "conditions": {
-                "weather": weather,
-                "road": road_condition,
-                "lighting": lighting
-            }
-        }
-        
         with st.spinner("Анализирую ситуацию..."):
             try:
                 # Сохраняем результат анализа в session state
                 st.session_state.analysis_result = analyze_situation(case_details)
+                
                 analysis = st.session_state.analysis_result
                 
                 # Выводим результаты
@@ -420,15 +396,15 @@ def main():
                 st.subheader("Тип ситуации")
                 st.info(analysis["situation_type"])
                 
-                # Первоочередные действия
+                # Первоочередные действия (теперь без чекбоксов)
                 with st.expander("🎯 Первоочередные действия", expanded=True):
                     for action in analysis["primary_actions"]:
-                        st.checkbox(action, key=f"action_{action}")
+                        st.markdown(f"• {action}")
                 
                 # Экспертизы
                 with st.expander("🔍 Необходимые экспертизы", expanded=True):
                     for exam in analysis["required_examinations"]:
-                        st.markdown(f"- {exam}")
+                        st.markdown(f"• {exam}")
                 
                 # План допросов
                 display_interrogation_plan(analysis)
@@ -437,11 +413,45 @@ def main():
                 if analysis.get("special_recommendations"):
                     with st.expander("💡 Особые рекомендации", expanded=True):
                         for rec in analysis["special_recommendations"]:
-                            st.markdown(f"- {rec}")
+                            st.markdown(f"• {rec}")
+                            
+                # Добавим кнопку для экспорта всего плана расследования
+                if st.button("Экспортировать план расследования"):
+                    plan_text = []
+                    
+                    plan_text.append("=== ПЛАН РАССЛЕДОВАНИЯ ДТП ===\n")
+                    
+                    plan_text.append("ТИП СИТУАЦИИ:")
+                    plan_text.append(analysis["situation_type"])
+                    plan_text.append("")
+                    
+                    plan_text.append("ПЕРВООЧЕРЕДНЫЕ ДЕЙСТВИЯ:")
+                    for action in analysis["primary_actions"]:
+                        plan_text.append(f"• {action}")
+                    plan_text.append("")
+                    
+                    plan_text.append("НЕОБХОДИМЫЕ ЭКСПЕРТИЗЫ:")
+                    for exam in analysis["required_examinations"]:
+                        plan_text.append(f"• {exam}")
+                    plan_text.append("")
+                    
+                    if analysis.get("special_recommendations"):
+                        plan_text.append("ОСОБЫЕ РЕКОМЕНДАЦИИ:")
+                        for rec in analysis["special_recommendations"]:
+                            plan_text.append(f"• {rec}")
+                    
+                    plan_text = "\n".join(plan_text)
+                    
+                    st.download_button(
+                        label="Скачать план расследования",
+                        data=plan_text,
+                        file_name="investigation_plan.txt",
+                        mime="text/plain"
+                    )
                 
             except Exception as e:
                 st.error(f"Произошла ошибка при анализе: {str(e)}")
-                st.exception(e)  # Правильный способ показать подробности ошибки
+                st.exception(e)
 
 if __name__ == "__main__":
     main()
