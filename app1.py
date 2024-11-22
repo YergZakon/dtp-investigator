@@ -301,9 +301,8 @@ def main():
         )
         
         # Добавляем возможность изменить API ключ в сайдбаре
-        # if st.button("Изменить API ключ"):
-       #     st.session_state.ANTHROPIC_API_KEY = None
-        
+        if st.button("Изменить API ключ"):
+            st.session_state.ANTHROPIC_API_KEY = None
     
     # Проверяем наличие API ключа перед отображением основного интерфейса
     api_key = get_api_key()
@@ -383,6 +382,32 @@ def main():
     
     # Кнопка анализа
     if st.button("Проанализировать ситуацию", type="primary"):
+        # Собираем все данные в словарь
+        case_details = {
+            "date_time": str(date_time),
+            "location": location,
+            "incident_type": incident_type,
+            "participants": {
+                "vehicle": {
+                    "present": vehicle_present,
+                    "details": vehicle_details if vehicle_present else None
+                },
+                "victim": {
+                    "present": victim_present,
+                    "details": victim_details if victim_present else None
+                },
+                "driver": {
+                    "present": driver_present,
+                    "details": driver_details if driver_present else None
+                }
+            },
+            "conditions": {
+                "weather": weather,
+                "road": road_condition,
+                "lighting": lighting
+            }
+        }
+        
         with st.spinner("Анализирую ситуацию..."):
             try:
                 # Сохраняем результат анализа в session state
@@ -396,7 +421,7 @@ def main():
                 st.subheader("Тип ситуации")
                 st.info(analysis["situation_type"])
                 
-                # Первоочередные действия (теперь без чекбоксов)
+                # Первоочередные действия
                 with st.expander("🎯 Первоочередные действия", expanded=True):
                     for action in analysis["primary_actions"]:
                         st.markdown(f"• {action}")
@@ -420,6 +445,9 @@ def main():
                     plan_text = []
                     
                     plan_text.append("=== ПЛАН РАССЛЕДОВАНИЯ ДТП ===\n")
+                    plan_text.append(f"Дата происшествия: {date_time}")
+                    plan_text.append(f"Место происшествия: {location}")
+                    plan_text.append(f"Тип происшествия: {incident_type}\n")
                     
                     plan_text.append("ТИП СИТУАЦИИ:")
                     plan_text.append(analysis["situation_type"])
