@@ -301,8 +301,8 @@ def main():
         )
         
         # Добавляем возможность изменить API ключ в сайдбаре
-        if st.button("Изменить API ключ"):
-            st.session_state.ANTHROPIC_API_KEY = None
+        # if st.button("Изменить API ключ"):
+        #    st.session_state.ANTHROPIC_API_KEY = None
     
     # Проверяем наличие API ключа перед отображением основного интерфейса
     api_key = get_api_key()
