@@ -171,13 +171,10 @@ def analyze_situation(case_details: Dict) -> Dict:
 
 def display_interrogation_plan(analysis: Dict):
     """
-    Отображение плана допросов с сохранением состояния чекбоксов
+    Отображение плана допросов без чекбоксов
     """
     st.header("4. План допросов")
     
-    if 'interrogation_plan_state' not in st.session_state:
-        st.session_state.interrogation_plan_state = {}
-        
     interrogation_plan = analysis.get("interrogation_plan", {})
     
     # Вопросы для свидетелей
@@ -186,38 +183,17 @@ def display_interrogation_plan(analysis: Dict):
         if witness_questions.get("general"):
             st.subheader("Общие вопросы")
             for q in witness_questions["general"]:
-                key = f"w_gen_{hash(q)}"
-                if key not in st.session_state.interrogation_plan_state:
-                    st.session_state.interrogation_plan_state[key] = False
-                st.session_state.interrogation_plan_state[key] = st.checkbox(
-                    q, 
-                    key=key,
-                    value=st.session_state.interrogation_plan_state[key]
-                )
+                st.markdown(f"• {q}")
             
         if witness_questions.get("specific"):
             st.subheader("Специфические вопросы")
             for q in witness_questions["specific"]:
-                key = f"w_spec_{hash(q)}"
-                if key not in st.session_state.interrogation_plan_state:
-                    st.session_state.interrogation_plan_state[key] = False
-                st.session_state.interrogation_plan_state[key] = st.checkbox(
-                    q,
-                    key=key,
-                    value=st.session_state.interrogation_plan_state[key]
-                )
+                st.markdown(f"• {q}")
             
         if witness_questions.get("technical"):
             st.subheader("Технические аспекты")
             for q in witness_questions["technical"]:
-                key = f"w_tech_{hash(q)}"
-                if key not in st.session_state.interrogation_plan_state:
-                    st.session_state.interrogation_plan_state[key] = False
-                st.session_state.interrogation_plan_state[key] = st.checkbox(
-                    q,
-                    key=key,
-                    value=st.session_state.interrogation_plan_state[key]
-                )
+                st.markdown(f"• {q}")
 
     # Вопросы для водителя
     driver_questions = interrogation_plan.get("driver_questions", {})
@@ -226,50 +202,22 @@ def display_interrogation_plan(analysis: Dict):
             if driver_questions.get("pre_incident"):
                 st.subheader("События до ДТП")
                 for q in driver_questions["pre_incident"]:
-                    key = f"d_pre_{hash(q)}"
-                    if key not in st.session_state.interrogation_plan_state:
-                        st.session_state.interrogation_plan_state[key] = False
-                    st.session_state.interrogation_plan_state[key] = st.checkbox(
-                        q,
-                        key=key,
-                        value=st.session_state.interrogation_plan_state[key]
-                    )
+                    st.markdown(f"• {q}")
             
             if driver_questions.get("incident"):
                 st.subheader("О происшествии")
                 for q in driver_questions["incident"]:
-                    key = f"d_inc_{hash(q)}"
-                    if key not in st.session_state.interrogation_plan_state:
-                        st.session_state.interrogation_plan_state[key] = False
-                    st.session_state.interrogation_plan_state[key] = st.checkbox(
-                        q,
-                        key=key,
-                        value=st.session_state.interrogation_plan_state[key]
-                    )
+                    st.markdown(f"• {q}")
             
             if driver_questions.get("post_incident"):
                 st.subheader("После происшествия")
                 for q in driver_questions["post_incident"]:
-                    key = f"d_post_{hash(q)}"
-                    if key not in st.session_state.interrogation_plan_state:
-                        st.session_state.interrogation_plan_state[key] = False
-                    st.session_state.interrogation_plan_state[key] = st.checkbox(
-                        q,
-                        key=key,
-                        value=st.session_state.interrogation_plan_state[key]
-                    )
+                    st.markdown(f"• {q}")
             
             if driver_questions.get("technical"):
                 st.subheader("Техническое состояние ТС")
                 for q in driver_questions["technical"]:
-                    key = f"d_tech_{hash(q)}"
-                    if key not in st.session_state.interrogation_plan_state:
-                        st.session_state.interrogation_plan_state[key] = False
-                    st.session_state.interrogation_plan_state[key] = st.checkbox(
-                        q,
-                        key=key,
-                        value=st.session_state.interrogation_plan_state[key]
-                    )
+                    st.markdown(f"• {q}")
 
     # Вопросы для потерпевшего
     victim_questions = interrogation_plan.get("victim_questions", {})
@@ -278,50 +226,69 @@ def display_interrogation_plan(analysis: Dict):
             if victim_questions.get("pre_incident"):
                 st.subheader("События до ДТП")
                 for q in victim_questions["pre_incident"]:
-                    key = f"v_pre_{hash(q)}"
-                    if key not in st.session_state.interrogation_plan_state:
-                        st.session_state.interrogation_plan_state[key] = False
-                    st.session_state.interrogation_plan_state[key] = st.checkbox(
-                        q,
-                        key=key,
-                        value=st.session_state.interrogation_plan_state[key]
-                    )
+                    st.markdown(f"• {q}")
             
             if victim_questions.get("incident"):
                 st.subheader("О происшествии")
                 for q in victim_questions["incident"]:
-                    key = f"v_inc_{hash(q)}"
-                    if key not in st.session_state.interrogation_plan_state:
-                        st.session_state.interrogation_plan_state[key] = False
-                    st.session_state.interrogation_plan_state[key] = st.checkbox(
-                        q,
-                        key=key,
-                        value=st.session_state.interrogation_plan_state[key]
-                    )
+                    st.markdown(f"• {q}")
             
             if victim_questions.get("health"):
                 st.subheader("Состояние здоровья")
                 for q in victim_questions["health"]:
-                    key = f"v_health_{hash(q)}"
-                    if key not in st.session_state.interrogation_plan_state:
-                        st.session_state.interrogation_plan_state[key] = False
-                    st.session_state.interrogation_plan_state[key] = st.checkbox(
-                        q,
-                        key=key,
-                        value=st.session_state.interrogation_plan_state[key]
-                    )
-                    
-    # Добавим кнопку для экспорта отмеченных вопросов
-    if st.button("Экспортировать выбранные вопросы"):
-        selected_questions = {k: v for k, v in st.session_state.interrogation_plan_state.items() if v}
-        if selected_questions:
-            questions_text = "\n".join([k.split('_')[-1] for k in selected_questions.keys()])
-            st.download_button(
-                label="Скачать отмеченные вопросы",
-                data=questions_text,
-                file_name="selected_questions.txt",
-                mime="text/plain"
-            )
+                    st.markdown(f"• {q}")
+    
+    # Добавим кнопку для экспорта всех вопросов
+    if st.button("Экспортировать все вопросы"):
+        all_questions = []
+        
+        if witness_questions:
+            all_questions.append("\n=== ВОПРОСЫ ДЛЯ СВИДЕТЕЛЕЙ ===\n")
+            if witness_questions.get("general"):
+                all_questions.append("\nОбщие вопросы:")
+                all_questions.extend([f"• {q}" for q in witness_questions["general"]])
+            if witness_questions.get("specific"):
+                all_questions.append("\nСпецифические вопросы:")
+                all_questions.extend([f"• {q}" for q in witness_questions["specific"]])
+            if witness_questions.get("technical"):
+                all_questions.append("\nТехнические аспекты:")
+                all_questions.extend([f"• {q}" for q in witness_questions["technical"]])
+        
+        if driver_questions:
+            all_questions.append("\n=== ВОПРОСЫ ДЛЯ ВОДИТЕЛЯ ===\n")
+            if driver_questions.get("pre_incident"):
+                all_questions.append("\nСобытия до ДТП:")
+                all_questions.extend([f"• {q}" for q in driver_questions["pre_incident"]])
+            if driver_questions.get("incident"):
+                all_questions.append("\nО происшествии:")
+                all_questions.extend([f"• {q}" for q in driver_questions["incident"]])
+            if driver_questions.get("post_incident"):
+                all_questions.append("\nПосле происшествия:")
+                all_questions.extend([f"• {q}" for q in driver_questions["post_incident"]])
+            if driver_questions.get("technical"):
+                all_questions.append("\nТехническое состояние ТС:")
+                all_questions.extend([f"• {q}" for q in driver_questions["technical"]])
+        
+        if victim_questions:
+            all_questions.append("\n=== ВОПРОСЫ ДЛЯ ПОТЕРПЕВШЕГО ===\n")
+            if victim_questions.get("pre_incident"):
+                all_questions.append("\nСобытия до ДТП:")
+                all_questions.extend([f"• {q}" for q in victim_questions["pre_incident"]])
+            if victim_questions.get("incident"):
+                all_questions.append("\nО происшествии:")
+                all_questions.extend([f"• {q}" for q in victim_questions["incident"]])
+            if victim_questions.get("health"):
+                all_questions.append("\nСостояние здоровья:")
+                all_questions.extend([f"• {q}" for q in victim_questions["health"]])
+        
+        questions_text = "\n".join(all_questions)
+        st.download_button(
+            label="Скачать все вопросы",
+            data=questions_text,
+            file_name="investigation_questions.txt",
+            mime="text/plain"
+        )
+            
 def main():
     st.title("🚗 Помощник следователя по ДТП")
     
